@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDS AI 视频演示</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 300px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .time-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+        .time-btn:hover {
+            background-color: #45a049;
+        }
+        .time-btn:active {
+            background-color: #3e8e41;
+        }
+        .video-container {
+            width: 100%;
+        }
+        video {
+            width: 100%;
+            border-radius: 4px;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>时间节点</h2>
+            <button class="time-btn" data-time="33">00:33 多模态问答：图片和语音</button>
+            <button class="time-btn" data-time="60">01:00 多模态问答：切换AI角色</button>
+            <button class="time-btn" data-time="125">02:05 多模态问答：回复带视频讲解</button>
+            <button class="time-btn" data-time="142">02:22 控制代理：简单的控制代理能力</button>
+            <button class="time-btn" data-time="230">03:50 控制代理：编写和执行无界面Python脚本</button>
+            <button class="time-btn" data-time="344">05:44 控制代理：编写和执行有界面Python脚本</button>
+            <button class="time-btn" data-time="404">06:44 实验代理：XY实验</button>
+            <!-- 可以根据实际视频内容添加更多时间点按钮 -->
+        </div>
+        <div class="main-content">
+            <h1>FDS AI 视频演示</h1>
+            <div class="video-container">
+                <video id="videoPlayer" controls>
+                    <source src="fds_ai.mp4" type="video/mp4">
+                    您的浏览器不支持 HTML5 视频播放。
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const timeButtons = document.querySelectorAll('.time-btn');
+            
+            timeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 获取按钮上设置的时间（秒）
+                    const timeInSeconds = parseInt(this.getAttribute('data-time'));
+                    
+                    // 设置视频当前时间并开始播放
+                    videoPlayer.currentTime = timeInSeconds;
+                    videoPlayer.play();
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
