@@ -4,84 +4,441 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FDS AI 视频演示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #8338ec;
+            --accent-color: #ff006e;
+            --dark-bg: #1a1a2e;
+            --light-bg: #f8f9fa;
+            --text-color: #333;
+            --light-text: #fff;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+            background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .header h1::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .header h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #666;
+            max-width: 700px;
+            margin: 1rem auto;
+        }
+        
         .container {
             display: flex;
             max-width: 1200px;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .sidebar {
-            width: 300px;
-            background-color: #f0f0f0;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .main-content {
-            flex: 1;
-            padding: 20px;
-        }
-        .time-btn {
-            display: block;
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #4CAF50;
-            color: white;
+            margin: 0 auto;
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            transform: translateY(0);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar {
+            width: 320px;
+            background: linear-gradient(135deg, #16222A, #3A6073);
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+        }
+        
+        .sidebar h2 {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .sidebar h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+        
+        .time-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             text-align: left;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .time-btn::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
         .time-btn:hover {
-            background-color: #45a049;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
         }
+        
+        .time-btn:hover::before {
+            transform: scaleY(1);
+        }
+        
         .time-btn:active {
-            background-color: #3e8e41;
+            transform: translateX(5px) scale(0.98);
         }
+        
+        .time-btn .time-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+            color: var(--accent-color);
+            transition: var(--transition);
+        }
+        
+        .time-btn:hover .time-icon {
+            transform: rotate(360deg) scale(1.2);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: #fff;
+            position: relative;
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+        
+        .main-content h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .main-content h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
         .video-container {
             width: 100%;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
+        
         video {
             width: 100%;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
+            display: block;
         }
-        h1 {
-            color: #333;
+        
+        video:focus {
+            outline: none;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        video:playing + .video-overlay {
+            opacity: 0;
+        }
+        
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid #fff;
+        }
+        
+        .play-btn i {
+            color: #fff;
+            font-size: 2rem;
+        }
+        
+        .tech-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" width="100" height="100"/><path d="M50 10 L90 50 L50 90 L10 50 Z" stroke="%233a86ff" stroke-width="1" fill="none"/><circle cx="50" cy="50" r="30" stroke="%238338ec" stroke-width="1" fill="none"/><path d="M30 40 L40 40 L50 30 L60 40 L70 40" stroke="%23ff006e" stroke-width="1" fill="none"/></svg>');
+            background-size: 200px;
+        }
+        
+        .ai-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+        }
+        
+        .ai-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+            background: var(--primary-color);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .ai-dot:nth-child(2) {
+            animation-delay: 0.2s;
+            background: var(--secondary-color);
+        }
+        
+        .ai-dot:nth-child(3) {
+            animation-delay: 0.4s;
+            background: var(--accent-color);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                width: 95%;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-radius: var(--border-radius) var(--border-radius) 0 0;
+            }
+            
+            .main-content {
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header h2 {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .page-wrapper {
+                padding: 1rem;
+            }
+        }
+        
+        /* Custom video controls animation */
+        video::-webkit-media-controls-panel {
+            background: rgba(26, 26, 46, 0.7);
+            transition: all 0.3s ease;
+        }
+        
+        video::-webkit-media-controls-play-button,
+        video::-webkit-media-controls-pause-button {
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+        
+        video::-webkit-media-controls-play-button:hover,
+        video::-webkit-media-controls-pause-button:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Animation for active time button */
+        .time-btn.active {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(10px);
+        }
+        
+        .time-btn.active::before {
+            transform: scaleY(1);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h2>时间节点</h2>
-            <button class="time-btn" data-time="33">00:33 多模态问答：图片和语音</button>
-            <button class="time-btn" data-time="60">01:00 多模态问答：切换AI角色</button>
-            <button class="time-btn" data-time="125">02:05 多模态问答：回复带视频讲解</button>
-            <button class="time-btn" data-time="142">02:22 控制代理：简单的控制代理能力</button>
-            <button class="time-btn" data-time="230">03:50 控制代理：编写和执行无界面Python脚本</button>
-            <button class="time-btn" data-time="344">05:44 控制代理：编写和执行有界面Python脚本</button>
-            <button class="time-btn" data-time="404">06:44 实验代理：XY实验</button>
-            <!-- 可以根据实际视频内容添加更多时间点按钮 -->
+    <div class="page-wrapper">
+       
+        <div class="header">
+            <h1>最新自主AI Agent代理</h1>
+            <h2>赋能教学，打造卓越实验室，创新科技教育体验</h2>
+            <h2>OWON FDS小欧AI仪器助手，智能化实验教学的未来</h2>
         </div>
-        <div class="main-content">
-            <h1>最新自主AI Agent代理，赋能教学，打造卓越实验室。</h1>
-            <h2>FDS小欧AI仪器助手视频演示</h2>
-            <div class="video-container">
-                <video id="videoPlayer" controls>
-                    <source src="fds_ai.mp4" type="video/mp4">
-                    您的浏览器不支持 HTML5 视频播放。
-                </video>
+
+        <div class="container">
+            <div class="tech-bg"></div>
+            
+            <div class="sidebar">
+                <h2>视频内容导航</h2>
+                <button class="time-btn" data-time="33">
+                    <span class="time-icon"><i class="fas fa-comment-dots"></i></span>
+                    <span>00:33 多模态问答：图片和语音</span>
+                </button>
+                <button class="time-btn" data-time="60">
+                    <span class="time-icon"><i class="fas fa-robot"></i></span>
+                    <span>01:00 多模态问答：切换AI角色</span>
+                </button>
+                <button class="time-btn" data-time="125">
+                    <span class="time-icon"><i class="fas fa-video"></i></span>
+                    <span>02:05 多模态问答：回复带视频讲解</span>
+                </button>
+                <button class="time-btn" data-time="142">
+                    <span class="time-icon"><i class="fas fa-cogs"></i></span>
+                    <span>02:22 控制代理：简单的控制代理能力</span>
+                </button>
+                <button class="time-btn" data-time="230">
+                    <span class="time-icon"><i class="fas fa-code"></i></span>
+                    <span>03:50 控制代理：编写无界面脚本</span>
+                </button>
+                <button class="time-btn" data-time="344">
+                    <span class="time-icon"><i class="fas fa-desktop"></i></span>
+                    <span>05:44 控制代理：编写有界面脚本</span>
+                </button>
+                <button class="time-btn" data-time="404">
+                    <span class="time-icon"><i class="fas fa-flask"></i></span>
+                    <span>06:44 实验代理：XY实验</span>
+                </button>
+                
+                <div class="ai-dots">
+                    <div class="ai-dot"></div>
+                    <div class="ai-dot"></div>
+                    <div class="ai-dot"></div>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                
+                
+                
+                <div class="video-container">
+                    <video id="videoPlayer" controls>
+                        <source src="fds_ai.mp4" type="video/mp4">
+                        您的浏览器不支持 HTML5 视频播放。
+                    </video>
+                    <div class="video-overlay">
+                        <div class="play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -90,16 +447,69 @@
         document.addEventListener('DOMContentLoaded', function() {
             const videoPlayer = document.getElementById('videoPlayer');
             const timeButtons = document.querySelectorAll('.time-btn');
+            const videoOverlay = document.querySelector('.video-overlay');
+            const playBtn = document.querySelector('.play-btn');
             
+            // 设置按钮点击事件
             timeButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    timeButtons.forEach(b => b.classList.remove('active'));
+                    
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
                     // 获取按钮上设置的时间（秒）
                     const timeInSeconds = parseInt(this.getAttribute('data-time'));
+                    
+                    // 添加点击动画效果
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
                     
                     // 设置视频当前时间并开始播放
                     videoPlayer.currentTime = timeInSeconds;
                     videoPlayer.play();
                 });
+            });
+            
+            // 点击视频覆盖层播放视频
+            videoOverlay.addEventListener('click', function() {
+                videoPlayer.play();
+            });
+            
+            // 监听视频播放/暂停状态
+            videoPlayer.addEventListener('play', function() {
+                videoOverlay.style.opacity = '0';
+            });
+            
+            videoPlayer.addEventListener('pause', function() {
+                videoOverlay.style.opacity = '1';
+            });
+            
+            // 页面加载动画
+            const container = document.querySelector('.container');
+            setTimeout(() => {
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // 监听视频时间更新，同步高亮对应的按钮
+            videoPlayer.addEventListener('timeupdate', function() {
+                const currentTime = videoPlayer.currentTime;
+                
+                // 移除所有按钮的active类
+                timeButtons.forEach(b => b.classList.remove('active'));
+                
+                // 查找当前时间对应的按钮并添加active类
+                for (let i = timeButtons.length - 1; i >= 0; i--) {
+                    const btnTime = parseInt(timeButtons[i].getAttribute('data-time'));
+                    if (currentTime >= btnTime) {
+                        timeButtons[i].classList.add('active');
+                        break;
+                    }
+                }
             });
         });
     </script>
